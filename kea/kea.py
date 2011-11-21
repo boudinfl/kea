@@ -9,10 +9,10 @@
     Florian Boudin (florian.boudin@univ-nantes.fr)
 
 :Version:
-    0.2-dev
+    0.21
 
 :Date:
-    - 26 oct. 2011
+    - 21 nov. 2011
 
 :Description:
     kea is a tokenizer for French. The tokenization process is decomposed in two
@@ -24,6 +24,7 @@
            fixed contractions such as *aujourd'hui* are considered as one token)
 
 :History:
+    - 0.21 (21 nov. 2011), bug fixes, adding the french city lexicon
     - 0.2 (26 oct. 2011), adding a large lexicon constructed from the lefff.
     - 0.1 (20 oct. 2011), first released version.
 
@@ -50,26 +51,28 @@ class tokenizer:
 
     #-T-----------------------------------------------------------------------T-
     def __init__(self):
-        """ Constructs a new tokenizer """
+        """ Constructs a new tokenizer. """
         
         self.resources = os.path.dirname(__file__) + '/resources/'
-        """ The path of the resources folder """
+        """ The path of the resources folder. """
         
         self.lexicon = {}
-        """ The dictionary containing the lexicon """
+        """ The dictionary containing the lexicon. """
 
         self.regexp = re.compile(r"""(?xumsi)
-          [lcdjmnts]'| qu'                              # Contractions
+          (?:[lcdjmnts]|qu)'                            # Contractions
         | http:[^\s]+\.\w{2,3}                          # Adresses web
-        | \w+-\w+|\w+-\w+-\w+                           # Most composés
-        | \d+\,\d+|\d+\.\d+                             # Les chiffres
-        | \.+|\-+                                       # Les ponctuations
+        | \d+[.,]\d+                                    # Les réels en/fr
+        | [.-]+                                         # Les ponctuations
         | \w+                                           # Les mots pleins
         | [^\w\s]                                       # -
         """)
         
         self.loadlist(self.resources+'abbrs.list')
-        """ Loads the default lexicon """
+        """ Loads the default lexicon (path is /resources/abbrs.list). """
+        
+        self.loadlist(self.resources+'villes.list')
+        """ Loads the city lexicon (path is /resources/villes.list). """
     #-B-----------------------------------------------------------------------B-
 
 
@@ -87,7 +90,7 @@ class tokenizer:
         tokens = self.regexp.findall(text)
         
         #=======================================================================
-        # STEP 2 : merge over-tokenized units using the lexicon
+        # STEP 2 : merge over-tokenized units using the lexicons
         #=======================================================================
         
         # A temporary list used for merging tokens
@@ -129,7 +132,7 @@ class tokenizer:
     
     #-T-----------------------------------------------------------------------T-
     def loadlist(self, path):
-        """ Load a resource list and generate the corresponding regexp part """
+        """ Load a resource list and generate the corresponding regexp part. """
 
         # Reading the input file sequentially
         for line in codecs.open(path, 'r', 'utf-8'):
