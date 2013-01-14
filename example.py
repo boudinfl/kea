@@ -11,3 +11,10 @@ keatokenizer = kea.tokenizer()
 tokens = keatokenizer.tokenize(sentence)
 print tokens
 ################################################################################
+
+################################################################################
+sentence = u"D’où le repli des penseurs républicains sur la forme nécessaire d’une « identité nationale », seul lieu possible d’une démocratie comme auto-détermination collective contre les périls du libéralisme et du communautarisme."
+keatokenizer = kea.tokenizer()
+tokens = keatokenizer.tokenize(sentence)
+print tokens
+################################################################################

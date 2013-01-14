@@ -9,7 +9,7 @@
     Florian Boudin (florian.boudin@univ-nantes.fr)
 
 :Version:
-    0.21
+    0.22
 
 :Date:
     - 21 nov. 2011
@@ -24,6 +24,7 @@
            fixed contractions such as *aujourd'hui* are considered as one token)
 
 :History:
+    - 0.22 (13 feb. 2012), adding the compound words exceptions
     - 0.21 (21 nov. 2011), bug fixes, adding the french city lexicon
     - 0.2 (26 oct. 2011), adding a large lexicon constructed from the lefff.
     - 0.1 (20 oct. 2011), first released version.
@@ -60,7 +61,7 @@ class tokenizer:
         """ The dictionary containing the lexicon. """
 
         self.regexp = re.compile(r"""(?xumsi)
-          (?:[lcdjmnts]|qu)'                            # Contractions
+          (?:[lcdjmnts]|qu)['’]                         # Contractions
         | http:[^\s]+\.\w{2,3}                          # Adresses web
         | \d+[.,]\d+                                    # Les réels en/fr
         | [.-]+                                         # Les ponctuations
@@ -81,12 +82,14 @@ class tokenizer:
         """
         Tokenize the sentence given in parameter and return a list of tokens. 
         This is a two-steps process: 1. tokenize text using punctuation marks,
-        2. merge over-tokenized units using the lexicon.
+        2. merge over-tokenized units using the lexicon or a regex (for 
+        compounds, '^[A-Z][a-z]+-[A-Z][a-z]+$').
         """
         
         #=======================================================================
         # STEP 1 : tokenize with punctuation
         #=======================================================================
+        text = text.replace(u'\u2019', '\'')
         tokens = self.regexp.findall(text)
         
         #=======================================================================
@@ -111,14 +114,17 @@ class tokenizer:
                 # Construct the candidate token from i to j
                 for k in range(i, j):
                     candidate += tokens[k]
-                # If the candidate word must be tokenized
-                if self.lexicon.has_key(candidate.lower()):
+                # If the candidate word must be tokenized (in the dictionary or
+                # corresponds to a compound with uppercase first letters)
+                if self.lexicon.has_key(candidate.lower()) or \
+                    (re.search('(?u)^[A-Z]\w+-[A-Z]\w+$', candidate) and \
+                    j-i < 3):
                     # Place first counter on the last word
                     i = j-1
                     # Replace the i-th token by the candidate
                     tokens[i] = candidate
                     # Stop the candidate construction
-                    break
+                    break                    
                 # Increment second counter
                 j += 1
             # Add the token to the temporary list
