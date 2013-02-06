@@ -1,5 +1,4 @@
-kea is a tokenizer for French 
------------------------------
+# kea is a tokenizer for French
 
 The tokenization process is decomposed in two steps:
     
@@ -11,8 +10,9 @@ The tokenization process is decomposed in two steps:
 
 A typical usage of this module is sample
     
->>> import kea
->>> sentence = "Le Kea est le seul perroquet alpin au monde."
->>> keatokenizer = kea.tokenizer()
->>> tokens = keatokenizer.tokenize(sentence)
-['Le', 'Kea', 'est', 'le', 'seul', 'perroquet', 'alpin', 'au', 'monde', '.']
+    import kea
+	sentence = "Le Kea est le seul perroquet alpin au monde."
+	keatokenizer = kea.tokenizer()
+	tokens = keatokenizer.tokenize(sentence)
+	
+	['Le', 'Kea', 'est', 'le', 'seul', 'perroquet', 'alpin', 'au', 'monde', '.']
