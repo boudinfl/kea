@@ -1,5 +1,7 @@
-kea is a tokenizer for French. The tokenization process is decomposed in two 
-steps:
+kea is a tokenizer for French 
+-----------------------------
+
+The tokenization process is decomposed in two steps:
     
 1. A rule-based tokenization approach is employed using the punctuation as an 
    indication of token boundaries.
