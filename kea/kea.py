@@ -12,7 +12,7 @@
     0.22
 
 :Date:
-    - 21 nov. 2011
+    - 13 feb. 2012
 
 :Description:
     kea is a tokenizer for French. The tokenization process is decomposed in two
