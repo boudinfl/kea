@@ -60,7 +60,7 @@ class tokenizer:
         self.lexicon = {}
         """ The dictionary containing the lexicon. """
 
-        self.regexp = re.compile(r"""(?xumsi)
+        self.regexp = re.compile(ur"""(?xumsi)
           (?:[lcdjmnts]|qu)['’]                         # Contractions
         | http:[^\s]+\.\w{2,3}                          # Adresses web
         | \d+[.,]\d+                                    # Les réels en/fr
